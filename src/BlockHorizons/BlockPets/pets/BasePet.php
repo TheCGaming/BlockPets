@@ -196,48 +196,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->chested = $value;
 		$this->getLoader()->getDatabase()->updateChested($this->getPetName(), $this->getPetOwnerName());
 	}
-
-	/**
-	 * Levels up the pet's experience level by the given amount. Sends a title if $silent is false or not set.
-	 *
-	 * @param int  $amount
-	 * @param bool $silent
-	 *
-	 * @return bool
-	 */
-	public function levelUp(int $amount = 1, bool $silent = false): bool {
-		$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetLevelUpEvent($this->getLoader(), $this, $this->getPetLevel(), $this->getPetLevel() + $amount));
-		if($ev->isCancelled()) {
-			return false;
-		}
-		$this->setPetLevel($ev->getTo());
-
-		$this->calculator->recalculateAll();
-
-		if(!$silent && $this->getPetOwner() !== null) {
-			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
-		}
-		return true;
-	}
-
-	/**
-	 * Returns the current experience level of the pet.
-	 *
-	 * @return int
-	 */
-	public function getPetLevel(): int {
-		return $this->petLevel;
-	}
-
-	/**
-	 * Sets the pet's experience level to the given amount.
-	 *
-	 * @param int $petLevel
-	 */
-	public function setPetLevel(int $petLevel): void {
-		$this->petLevel = $petLevel;
-	}
-
 	/**
 	 * Returns the player that owns this pet if they are online, and null if not.
 	 *
@@ -323,55 +281,6 @@ abstract class BasePet extends Creature implements Rideable {
 	public function isRiding(): bool {
 		return $this->riding;
 	}
-
-	/**
-	 * Adds the given amount of experience points to the pet. Levels up the pet if required.
-	 *
-	 * @param float $points
-	 *
-	 * @return bool
-	 */
-	public function addPetLevelPoints(float $points): bool {
-		$totalPoints = $this->getPetLevelPoints() + (int) $points;
-		if($totalPoints >= $this->getRequiredLevelPoints($this->getPetLevel())) {
-			$this->setPetLevelPoints($totalPoints - $this->getRequiredLevelPoints($this->getPetLevel()));
-			$this->levelUp();
-			return true;
-		}
-		$this->setPetLevelPoints($totalPoints);
-		$this->calculator->updateNameTag();
-		return false;
-	}
-
-	/**
-	 * Returns the pet's current experience level points.
-	 *
-	 * @return int
-	 */
-	public function getPetLevelPoints(): int {
-		return $this->petLevelPoints;
-	}
-
-	/**
-	 * Sets the pet's experience level points to the given amount.
-	 *
-	 * @param int $points
-	 */
-	public function setPetLevelPoints(int $points): void {
-		$this->petLevelPoints = $points;
-	}
-
-	/**
-	 * Returns the required amount of points for the given level to level up automatically.
-	 *
-	 * @param int $level
-	 *
-	 * @return int
-	 */
-	public function getRequiredLevelPoints(int $level): int {
-		return (int) (20 + $level / 1.5 * $level);
-	}
-
 	/**
 	 * Returns the name of the owner of this pet.
 	 *
