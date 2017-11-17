@@ -9,7 +9,6 @@ use BlockHorizons\BlockPets\commands\ChangePetNameCommand;
 use BlockHorizons\BlockPets\commands\ClearPetCommand;
 use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\HealPetCommand;
-use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\PetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
