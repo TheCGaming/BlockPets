@@ -106,17 +106,11 @@ abstract class BasePet extends Creature implements Rideable {
 		parent::__construct($level, $nbt);
 		$this->selectProperties();
 
-		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->petLevel = $this->namedtag["petLevel"] - 1;
-		$this->petOwner = $this->namedtag["petOwner"];
-		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
-		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
-		$this->chested = (bool) $this->namedtag["chested"];
 
 		$this->setScale($this->scale);
 		if((bool) $this->namedtag["isBaby"] === true) {
@@ -127,7 +121,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 
 		$this->inventory = new PetInventoryHolder($this);
-		$this->levelUp(1, true);
 		$this->spawnToAll();
 
 		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
